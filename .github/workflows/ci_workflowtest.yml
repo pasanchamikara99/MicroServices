@@ -33,3 +33,9 @@ jobs:
         run: |
           npm install
           npm test
+
+      - name: Test Order Service
+        working-directory: ./Orders
+        run: |
+          npm install
+          npm test

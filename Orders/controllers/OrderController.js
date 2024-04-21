@@ -15,6 +15,19 @@ const placeOrder = (req, res) => {
     });
 };
 
+const viewOrders = async (req, res) => {
+  const userId = req.params.id;
+
+  const books = await Order.find({ customerID: userId }).exec();
+
+  if (books.length > 0) {
+    res.status(200).json(books);
+  } else {
+    res.status(404).json({ error: "No orders found" });
+  }
+};
+
 module.exports = {
   placeOrder,
+  viewOrders,
 };
