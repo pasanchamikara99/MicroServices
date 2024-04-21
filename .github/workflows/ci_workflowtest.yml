@@ -25,11 +25,11 @@ jobs:
       - name: Test Book Service
         working-directory: ./Books
         run: |
-          npm ci
+          npm install
           npm test
 
       - name: Test User Service
         working-directory: ./User
         run: |
-          npm ci
+          npm install
           npm test
