@@ -1,5 +1,10 @@
 const mongoose = require("mongoose");
-const { addOrder, getOrder, getAllOrders, deleteOrder } = require("../controller/orderController");
+const {
+  addOrder,
+  getOrder,
+  getAllOrders,
+  deleteOrder,
+} = require("../controllers/OrderController");
 const Order = require("../models/Order");
 
 jest.mock("../models/Order");
@@ -26,8 +31,8 @@ describe("Order API endpoints", () => {
       initialDate: new Date(),
       deliveryDate: new Date(),
     };
-    
-    await orderController.addOrder(req, res);
+
+    await addOrder(req, res);
 
     expect(res.status).toHaveBeenCalledWith(201);
     //expect(res.json).toHaveBeenCalledWith(expect.objectContaining(req.body));
@@ -46,7 +51,7 @@ describe("Order API endpoints", () => {
 
     Order.findById.mockResolvedValueOnce(mockedOrder);
 
-    await orderController.getOrder(req, res);
+    await getOrder(req, res);
 
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith(mockedOrder);
@@ -72,22 +77,22 @@ describe("Order API endpoints", () => {
 
     Order.find.mockResolvedValueOnce(mockedOrders);
 
-    await orderController.getAllOrders(req, res);
+    await getAllOrders(req, res);
 
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith(mockedOrders);
   });
 
   it("should delete an order by ID", async () => {
-     const mockedOrderId = '6624ac31c7ebe2d433001286';
+    const mockedOrderId = "6624ac31c7ebe2d433001286";
 
-     req.params = { id: mockedOrderId };
+    req.params = { id: mockedOrderId };
 
-     Order.findByIdAndDelete.mockResolvedValueOnce(true);
+    Order.findByIdAndDelete.mockResolvedValueOnce(true);
 
-     await orderController.deleteOrder(req, res);
+    await deleteOrder(req, res);
 
-     expect(res.status).toHaveBeenCalledWith(200);
-     expect(res.json).toHaveBeenCalledWith(true);
-   });
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith(true);
+  });
 });
