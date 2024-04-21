@@ -7,13 +7,13 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-const port = process.env.PORT || 3001;
+const port = process.env.BOOKS_PORT || 3001;
 
 app.use(express.json());
 app.use(router);
 
 mongoose
-  .connect(process.env.MONGODB_URL, {})
+  .connect(process.env.BOOKS_MONGODB_URL, {})
   .then(() => {
     console.log("Connected to MongoDB");
     app.listen(port, () => {
