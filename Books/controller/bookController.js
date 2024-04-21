@@ -5,8 +5,6 @@ const addbook = async (req, res) => {
   try {
     const book = new Book(req.body);
     const result = await book.save();
-    console.log(result);
-
     res.status(201).json(result); // Respond with the saved user data
   } catch (error) {
     console.error("Error saving user:", error);
