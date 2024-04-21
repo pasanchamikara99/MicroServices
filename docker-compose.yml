@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  gateway:
+    build: gateway/
+    ports:
+      - "3000:3000"
+
+  books:
+    build: Books/
+    ports:
+      - "3001:3001"
+    depends_on:
+      - gateway
+
+  orders:
+    build: Orders/
+    ports:
+      - "3002:3002"
+    depends_on:
+      - gateway
+
+  user:
+    build: User/
+    ports:
+      - "3003:3003"
+    depends_on:
+      - gateway
