@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const { addOrder, getOrder, getAllOrders, deleteOrder } = require("../controller/orderController");
-const Book = require("../models/Order");
+const Order = require("../models/Order");
 
 jest.mock("../models/Order");
 
