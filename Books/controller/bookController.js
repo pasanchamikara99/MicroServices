@@ -4,8 +4,10 @@ const Book = require("../models/Book");
 const addbook = async (req, res) => {
   try {
     const book = new Book(req.body);
-    await book.save();
-    res.status(201).json(book); // Respond with the saved user data
+    const result = await book.save();
+    console.log(result);
+
+    res.status(201).json(result); // Respond with the saved user data
   } catch (error) {
     console.error("Error saving user:", error);
     res.status(500).json({ error: "Internal server error" });
