@@ -1,41 +1,93 @@
-const Order = require('../models/Order');
-const {placeOrder} = require('../controllers/OrderController');
+const mongoose = require("mongoose");
+const { addOrder, getOrder, getAllOrders, deleteOrder } = require("../controller/orderController");
+const Order = require("../models/Order");
 
-jest.mock('../models/Order', () => ({
-  save: jest.fn(),
-}));
+jest.mock("../models/Order");
 
-describe('OrderController', () => {
-  describe('placeOrder', () => {
-    const req = {
-      body: {
-        customerID: 1,
-        BookId: 2,
-        initialDate: new Date(),
-        deliveryDate: new Date(),
-      },
-    };
+describe("Order API endpoints", () => {
+  let req, res;
 
-    const res = {
+  beforeEach(() => {
+    req = {};
+    res = {
       status: jest.fn(() => res),
       json: jest.fn(),
     };
-
-    afterEach(() => {
-      jest.clearAllMocks();
-    });
-
-    it('should place an order successfully', async () => {
-      const mockedOrder = {
-        _id: 3,
-        ...req.body,
-      };
-      //Order.save.mockResolvedValueOnce(mockedOrder);
-
-      await placeOrder(req, res);
-
-      expect(res.status).toHaveBeenCalledWith(500);
-      //expect(res.json).toHaveBeenCalledWith(mockedOrder);
-    });
   });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("should add a new order", async () => {
+    req.body = {
+      customerID: "CustomerID123",
+      BookId: "BookID456",
+      initialDate: new Date(),
+      deliveryDate: new Date(),
+    };
+    
+    await orderController.addOrder(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(201);
+    //expect(res.json).toHaveBeenCalledWith(expect.objectContaining(req.body));
+  });
+
+  it("should get an order by ID", async () => {
+    const mockedOrder = {
+      _id: 1,
+      customerID: "CustomerID123",
+      BookId: "BookID456",
+      initialDate: new Date(),
+      deliveryDate: new Date(),
+    };
+
+    req.params = { id: mockedOrder._id };
+
+    Order.findById.mockResolvedValueOnce(mockedOrder);
+
+    await orderController.getOrder(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith(mockedOrder);
+  });
+
+  it("should get all orders", async () => {
+    const mockedOrders = [
+      {
+        _id: 1,
+        customerID: "CustomerID123",
+        BookId: "BookID456",
+        initialDate: new Date(),
+        deliveryDate: new Date(),
+      },
+      {
+        _id: 2,
+        customerID: "CustomerID789",
+        BookId: "BookID012",
+        initialDate: new Date(),
+        deliveryDate: new Date(),
+      },
+    ];
+
+    Order.find.mockResolvedValueOnce(mockedOrders);
+
+    await orderController.getAllOrders(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith(mockedOrders);
+  });
+
+  it("should delete an order by ID", async () => {
+     const mockedOrderId = '6624ac31c7ebe2d433001286';
+
+     req.params = { id: mockedOrderId };
+
+     Order.findByIdAndDelete.mockResolvedValueOnce(true);
+
+     await orderController.deleteOrder(req, res);
+
+     expect(res.status).toHaveBeenCalledWith(200);
+     expect(res.json).toHaveBeenCalledWith(true);
+   });
 });

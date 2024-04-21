@@ -2,32 +2,61 @@ const express = require("express");
 const app = express();
 const Order = require("../models/Order");
 
-const placeOrder = async (req, res) => {
-  try{
-    const newOrder = new Order(req.body);
-    const result = await newOrder.save();
+const addOrder = async (req, res) => {
+  try {
+    const order = new Order(req.body);
+    const result = await order.save();
+    console.log(result);
+
     res.status(201).json(result);
-  }
-  catch (error) {
+  } catch (error) {
     console.error("Error saving order:", error);
     res.status(500).json({ error: "Internal server error" });
   }
-
 };
 
-const viewOrders = async (req, res) => {
-  const userId = req.params.id;
+const getOrder = async (req, res) => {
+  const id = req.params.id;
 
-  const books = await Order.find({ customerID: userId }).exec();
+  try {
+    const order = await Order.findById(id);
+    res.status(200).json(order);
+  } catch (error) {
+    console.error("Error fetching order:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
 
-  if (books.length > 0) {
-    res.status(200).json(books);
+const getAllOrders = async (req, res) => {
+  const orders = await Order.find();
+
+  if (orders.length > 0) {
+    res.status(200).json(orders);
   } else {
     res.status(404).json({ error: "No orders found" });
   }
 };
 
+const deleteOrder = async (req, res) => {
+  const id = req.params.id;
+
+  Order.findByIdAndDelete(id)
+    .then((order) => {
+      if (order) {
+        res.status(200).json(order);
+      } else {
+        res.status(404).json({ error: "Order not found" });
+      }
+    })
+    .catch((error) => {
+      console.error("Error deleting order:", error);
+      res.status(500).json({ error: "Internal server error" });
+    });
+};
+
 module.exports = {
-  placeOrder,
-  viewOrders,
+  addOrder,
+  getOrder,
+  getAllOrders,
+  deleteOrder,
 };
