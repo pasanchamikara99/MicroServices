@@ -3,10 +3,15 @@ const helmet = require("helmet");
 const { default: mongoose } = require("mongoose");
 const app = express();
 const router = require("./routes/routes");
+const cookieParser = require("cookie-parser");
+const csrf = require("csurf");
 
 const dotenv = require("dotenv");
 app.use(helmet());
 dotenv.config();
+
+app.use(cookieParser());
+app.use(csrf({ cookie: true }));
 
 const port = process.env.PORT || 3003;
 

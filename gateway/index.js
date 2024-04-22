@@ -3,13 +3,16 @@ const app = express();
 const helmet = require("helmet");
 const dotenv = require("dotenv");
 const proxy = require("express-http-proxy");
+const cookieParser = require("cookie-parser");
+const csrf = require("csurf");
 
 dotenv.config();
 app.use(helmet());
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
-//app.use(cors());
+app.use(cookieParser());
+app.use(csrf({ cookie: true }));
 
 app.use("/user", proxy("http://user:3003"));
 app.use("/book", proxy("http://books:3001"));
