@@ -61,3 +61,26 @@ jobs:
         with:
           name: snyk-report
           path: snyk-report
+
+  scan-secrets:
+    name: Scan for Secrets
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install truffleHog
+        run: |
+          wget https://github.com/trufflesecurity/truffleHog/releases/download/v2.0.93/trufflehog_linux_2_0_93
+          chmod +x trufflehog_linux_2_0_93
+          sudo mv trufflehog_linux_2_0_93 /usr/local/bin/trufflehog
+
+      - name: Run truffleHog
+        run: trufflehog --json > secrets-report.json
+
+      - name: Upload Secrets report
+        uses: actions/upload-artifact@v2
+        with:
+          name: secrets-report
+          path: secrets-report.json
