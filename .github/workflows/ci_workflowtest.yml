@@ -62,7 +62,7 @@ jobs:
           name: snyk-report
           path: snyk-report
   scan:
-    name: gitleaks
+    name: SecretsScan
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
