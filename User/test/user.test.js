@@ -1,5 +1,11 @@
 const mongoose = require("mongoose");
-const { getUserByID, addUser, getAllUsers, deleteUser, updateUser } = require("../controllers/UserController");
+const {
+  getUserByID,
+  addUser,
+  getAllUsers,
+  deleteUser,
+  updateUser,
+} = require("../controllers/UserController");
 const User = require("../models/User");
 
 jest.mock("../models/User"); // Mocking the User model
@@ -21,10 +27,10 @@ describe("User API endpoints", () => {
 
   it("should get a user by ID", async () => {
     const mockedUser = {
-      _id: 'mockedUserId',
-      username: 'testuser',
-      email: 'test@example.com',
-      password: 'password',
+      _id: "mockedUserId",
+      username: "testuser",
+      email: "test@example.com",
+      password: process.env.PASSWORD_FROM_ENV,
       createdAt: new Date(),
     };
 
@@ -41,7 +47,7 @@ describe("User API endpoints", () => {
   it("should handle user not found", async () => {
     User.findById.mockResolvedValueOnce(null);
 
-    req.params = { id: 'nonExistingId' };
+    req.params = { id: "nonExistingId" };
 
     await getUserByID(req, res);
 
@@ -51,12 +57,12 @@ describe("User API endpoints", () => {
 
   it("should add a new user", async () => {
     req.body = {
-      username: 'testuser',
-      email: 'test@example.com',
-      password: 'password',
+      username: "testuser",
+      email: "test@example.com",
+      password: process.env.PASSWORD_FROM_ENV,
     };
-    
-    const mockedUser = { ...req.body, _id: 'mockedUserId' };
+
+    const mockedUser = { ...req.body, _id: "mockedUserId" };
 
     //User.save.mockResolvedValueOnce(mockedUser);
 
@@ -69,16 +75,16 @@ describe("User API endpoints", () => {
   it("should get all users", async () => {
     const mockedUsers = [
       {
-        _id: 'mockedUserId1',
-        username: 'testuser1',
-        email: 'test1@example.com',
-        password: 'password1',
+        _id: "mockedUserId1",
+        username: "testuser1",
+        email: "test1@example.com",
+        password: process.env.PASSWORD_FROM_ENV,
       },
       {
-        _id: 'mockedUserId2',
-        username: 'testuser2',
-        email: 'test2@example.com',
-        password: 'password2',
+        _id: "mockedUserId2",
+        username: "testuser2",
+        email: "test2@example.com",
+        password: process.env.PASSWORD_FROM_ENV,
       },
     ];
 
@@ -91,15 +97,15 @@ describe("User API endpoints", () => {
   });
 
   it("should delete a user by ID", async () => {
-    const mockedUserId = 'mockedUserId';
+    const mockedUserId = "mockedUserId";
 
     req.params = { id: mockedUserId };
 
     const mockedUser = {
       _id: mockedUserId,
-      username: 'testuser',
-      email: 'test@example.com',
-      password: 'password',
+      username: "testuser",
+      email: "test@example.com",
+      password: process.env.PASSWORD_FROM_ENV,
       createdAt: new Date(),
     };
 
@@ -114,7 +120,7 @@ describe("User API endpoints", () => {
   it("should handle user not found when deleting", async () => {
     User.findByIdAndDelete.mockResolvedValueOnce(null);
 
-    req.params = { id: 'nonExistingId' };
+    req.params = { id: "nonExistingId" };
 
     await deleteUser(req, res);
 
@@ -123,20 +129,20 @@ describe("User API endpoints", () => {
   });
 
   it("should update a user by ID", async () => {
-    const mockedUserId = 'mockedUserId';
+    const mockedUserId = "mockedUserId";
 
     req.params = { id: mockedUserId };
     req.body = {
-      username: 'updatedusername',
-      email: 'updated@example.com',
-      password: 'updatedpassword',
+      username: "updatedusername",
+      email: "updated@example.com",
+      password: process.env.PASSWORD_FROM_ENV,
     };
 
     const mockedUpdatedUser = {
       _id: mockedUserId,
-      username: 'updatedusername',
-      email: 'updated@example.com',
-      password: 'updatedpassword',
+      username: "updatedusername",
+      email: "updated@example.com",
+      password: process.env.PASSWORD_FROM_ENV,
       createdAt: new Date(),
     };
 
@@ -151,7 +157,7 @@ describe("User API endpoints", () => {
   it("should handle user not found when updating", async () => {
     User.findByIdAndUpdate.mockResolvedValueOnce(null);
 
-    req.params = { id: 'nonExistingId' };
+    req.params = { id: "nonExistingId" };
 
     await updateUser(req, res);
 
