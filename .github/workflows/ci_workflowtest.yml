@@ -56,3 +56,8 @@ jobs:
         with:
           name: snyk-report
           path: snyk-report.json
+      - name: Download Snyk report artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: snyk-report
+          path: snyk-report
