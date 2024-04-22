@@ -72,3 +72,21 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE}}
+
+  dockerize:
+    name: Dockerize
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: docker build books
+        run: |
+          docker build -t ./Books books
+      - name: docker build user
+        run: |
+          docker build -t ./User user
+      - name: docker build order
+        run: |
+          docker build -t ./Orders order
+      - name: docker build gateway
+        run: |
+          docker build -t ./gateway gateway
