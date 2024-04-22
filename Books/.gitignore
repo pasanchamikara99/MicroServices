@@ -1,5 +1,4 @@
-# Ignore any package-lock files if you're using Node.js
-package-lock.json
+
 
 # Ignore any environment-specific files
 .env
