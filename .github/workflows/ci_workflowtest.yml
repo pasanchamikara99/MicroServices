@@ -7,7 +7,7 @@ on:
     branches: ["main"]
 
 jobs:
-  ci_verification:
+  buildAndTest:
     runs-on: ubuntu-latest
 
     strategy:
