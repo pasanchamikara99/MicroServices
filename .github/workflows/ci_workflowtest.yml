@@ -79,7 +79,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-      - name: Build Docker image Books
-        run: docker build -t books -f ./Books .
+      - name: docker build books
+        run: |
+          docker build ./Books -t books
