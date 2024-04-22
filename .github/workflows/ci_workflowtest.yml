@@ -78,15 +78,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: docker build books
-        run: |
-          docker build -t ./Books books
-      - name: docker build user
-        run: |
-          docker build -t ./User user
-      - name: docker build order
-        run: |
-          docker build -t ./Orders order
-      - name: docker build gateway
-        run: |
-          docker build -t ./gateway gateway
+      - name: Docker build books
+        run: docker build -t books:latest Books/
+      - name: Docker build user
+        run: docker build -t user:latest User/
+      - name: Docker build order
+        run: docker build -t orders:latest Orders/
+      - name: Docker build gateway
+        run: docker build -t gateway:latest gateway/
