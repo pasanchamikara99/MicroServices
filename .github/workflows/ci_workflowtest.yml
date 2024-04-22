@@ -79,10 +79,4 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Docker build books
-        run: docker build -t books:latest Books/
-      - name: Docker build user
-        run: docker build -t user:latest User/
-      - name: Docker build order
-        run: docker build -t orders:latest Orders/
-      - name: Docker build gateway
-        run: docker build -t gateway:latest gateway/
+        run: docker build -t books:latest -f Books/Dockerfile Books/
