@@ -1,10 +1,11 @@
 const express = require("express");
 const app = express();
+const helmet = require("helmet");
 const dotenv = require("dotenv");
 const proxy = require("express-http-proxy");
 
 dotenv.config();
-
+app.use(helmet());
 const port = process.env.PORT || 3000;
 
 app.use(express.json());

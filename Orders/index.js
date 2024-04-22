@@ -1,4 +1,5 @@
 const express = require("express");
+const helmet = require("helmet");
 const { default: mongoose } = require("mongoose");
 const app = express();
 const router = require("./routes/OrderRoutes");
@@ -6,6 +7,8 @@ const router = require("./routes/OrderRoutes");
 const dotenv = require("dotenv");
 
 dotenv.config();
+
+app.use(helmet());
 
 const port = process.env.PORT || 3002;
 
