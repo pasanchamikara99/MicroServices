@@ -82,3 +82,12 @@ jobs:
       - name: docker build books
         run: |
           docker build ./Books -t books
+      - name: docker build orders
+        run: |
+          docker build ./Orders -t orders
+      - name: docker build books
+        run: |
+          docker build ./User -t user
+      - name: docker build gateway
+        run: |
+          docker build ./gateway -t gateway
