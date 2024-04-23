@@ -116,3 +116,6 @@ jobs:
       - name: drun docker container
         run: |
           sudo docker run -d -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/gateway
+          sudo docker run -d -p 3002:3002 ${{ secrets.DOCKER_USERNAME }}/orders
+          sudo docker run -d -p 3003:3003 ${{ secrets.DOCKER_USERNAME }}/user
+          sudo docker run -d -p 3001:3001 ${{ secrets.DOCKER_USERNAME }}/books
