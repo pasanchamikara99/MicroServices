@@ -12,7 +12,7 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(csrf({ cookie: true }));
+//app.use(csrf({ cookie: true }));
 
 app.use("/user", proxy("http://user:3003"));
 app.use("/book", proxy("http://books:3001"));

@@ -62,9 +62,8 @@ jobs:
         with:
           name: snyk-report
           path: snyk_report.json
-  scan:
-    needs: buildAndTest
-    name: SecretsScan
+  SecretsScan:
+    needs: SnykSecurityScan
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -76,7 +75,7 @@ jobs:
           GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE}}
 
   dockerize:
-    needs: buildAndTest
+    needs: SecretsScan
     name: Dockerize
     runs-on: ubuntu-latest
     steps:
