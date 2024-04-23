@@ -2,9 +2,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: ["main"]
+    branches: ["awsEC2"]
   pull_request:
-    branches: ["main"]
+    branches: ["awsEC2"]
 
 jobs:
   buildAndTest:
@@ -13,7 +13,6 @@ jobs:
     strategy:
       matrix:
         node-version: [20.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
       - uses: actions/checkout@v3
@@ -76,7 +75,6 @@ jobs:
 
   dockerize:
     needs: SecretsScan
-    name: Dockerize
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -89,19 +87,35 @@ jobs:
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
       - name: docker build books
         run: |
-          docker build ./Books -t pasanchamikara99/books
+          docker build ./Books -t ${{ secrets.DOCKER_USERNAME }}/books
       - name: docker build orders
         run: |
-          docker build ./Orders -t pasanchamikara99/orders
+          docker build ./Orders -t ${{ secrets.DOCKER_USERNAME }}/orders
       - name: docker build books
         run: |
-          docker build ./User -t pasanchamikara99/user
+          docker build ./User -t ${{ secrets.DOCKER_USERNAME }}/user
       - name: docker build gateway
         run: |
-          docker build ./gateway -t pasanchamikara99/gateway
+          docker build ./gateway -t ${{ secrets.DOCKER_USERNAME }}/gateway
       - name: docker images push
         run: |
-          docker push pasanchamikara99/books
-          docker push pasanchamikara99/orders
-          docker push pasanchamikara99/user
-          docker push pasanchamikara99/gateway
+          docker push ${{ secrets.DOCKER_USERNAME }}/books
+          docker push ${{ secrets.DOCKER_USERNAME }}/orders
+          docker push ${{ secrets.DOCKER_USERNAME }}/user
+          docker push ${{ secrets.DOCKER_USERNAME }}/gateway
+  deploy:
+    needs: dockerize
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: SSH into EC2 and deploy Docker images
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            docker pull ${{ secrets.DOCKER_USERNAME }}/user
+            docker pull ${{ secrets.DOCKER_USERNAME }}/gateway
+            docker run -d -p 3000:3000 --name gateway ${{ secrets.DOCKER_USERNAME }}/gateway
