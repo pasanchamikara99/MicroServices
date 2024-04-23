@@ -4,15 +4,12 @@ const { default: mongoose } = require("mongoose");
 const app = express();
 const router = require("./routes/OrderRoutes");
 const cookieParser = require("cookie-parser");
-const csrf = require("csurf");
-
 const dotenv = require("dotenv");
 
 dotenv.config();
 
 app.use(helmet());
 app.use(cookieParser());
-//app.use(csrf({ cookie: true }));
 
 const port = process.env.PORT || 3002;
 

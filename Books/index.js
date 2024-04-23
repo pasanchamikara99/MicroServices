@@ -5,7 +5,6 @@ const router = require("./routes/bookRoutes");
 const dotenv = require("dotenv");
 const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
-const csrf = require("csurf");
 
 app.use(helmet());
 

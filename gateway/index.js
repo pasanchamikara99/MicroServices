@@ -4,7 +4,6 @@ const helmet = require("helmet");
 const dotenv = require("dotenv");
 const proxy = require("express-http-proxy");
 const cookieParser = require("cookie-parser");
-const csrf = require("csurf");
 
 dotenv.config();
 app.use(helmet());
