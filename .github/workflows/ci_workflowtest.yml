@@ -98,7 +98,8 @@ jobs:
         run: |
           docker build ./gateway -t pasanchamikara99/gateway
       - name: docker images push
-        run: docker push pasanchamikara99/books
+        run: |
+          docker push pasanchamikara99/books
           docker push pasanchamikara99/orders
           docker push pasanchamikara99/user
           docker push pasanchamikara99/gateway
