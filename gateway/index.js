@@ -17,6 +17,7 @@ app.use(cookieParser());
 app.use("/user", proxy("http://user:3003"));
 app.use("/book", proxy("http://books:3001"));
 app.use("/order", proxy("http://orders:3002"));
+app.use("/review", proxy("http://reviews:3004"));
 
 app.get("/", (req, res) => {
   res.json({
