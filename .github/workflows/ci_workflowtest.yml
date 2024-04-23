@@ -105,7 +105,7 @@ jobs:
           docker push ${{ secrets.DOCKER_USERNAME }}/gateway
   deploy:
     needs: dockerize
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
