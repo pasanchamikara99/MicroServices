@@ -12,7 +12,7 @@ dotenv.config();
 
 app.use(helmet());
 app.use(cookieParser());
-//app.use(csrf({ cookie: true }));
+app.use(csrf({ cookie: true }));
 
 const port = process.env.PORT || 3002;
 
