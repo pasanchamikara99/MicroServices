@@ -107,15 +107,12 @@ jobs:
     needs: dockerize
     runs-on: self-hosted
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: SSH into EC2 and deploy Docker images
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            docker pull ${{ secrets.DOCKER_USERNAME }}/user
-            docker pull ${{ secrets.DOCKER_USERNAME }}/gateway
-            docker run -d -p 3000:3000 --name gateway ${{ secrets.DOCKER_USERNAME }}/gateway
+      - name: pull docker image
+        run: |
+          docker pull ${{ secrets.DOCKER_USERNAME }}/books
+          docker pull ${{ secrets.DOCKER_USERNAME }}/orders
+          docker pull ${{ secrets.DOCKER_USERNAME }}/user
+          docker pull ${{ secrets.DOCKER_USERNAME }}/gateway
+      - name: drun docker container
+        run: |
+          docker run -d -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/gateway
