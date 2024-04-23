@@ -85,6 +85,7 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+          echo "Docker login successful"
       - name: docker build books
         run: |
           docker build ./Books -t books
