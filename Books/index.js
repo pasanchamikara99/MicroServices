@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(router);
 
 app.use(cookieParser());
-app.use(csrf({ cookie: true }));
+//app.use(csrf({ cookie: true }));
 
 mongoose
   .connect(process.env.BOOKS_MONGODB_URL, {})
