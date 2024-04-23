@@ -109,10 +109,10 @@ jobs:
     steps:
       - name: pull docker image
         run: |
-          docker pull ${{ secrets.DOCKER_USERNAME }}/books
-          docker pull ${{ secrets.DOCKER_USERNAME }}/orders
-          docker pull ${{ secrets.DOCKER_USERNAME }}/user
-          docker pull ${{ secrets.DOCKER_USERNAME }}/gateway
+          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/books
+          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/orders
+          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/user
+          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/gateway
       - name: drun docker container
         run: |
-          docker run -d -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/gateway
+          sudo docker run -d -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/gateway
