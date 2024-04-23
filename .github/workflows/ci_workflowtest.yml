@@ -99,8 +99,8 @@ jobs:
       # - name: docker build gateway
       #   run: |
       #     docker build ./gateway -t pasanchamikara99/gateway
-      # - name: docker push
-      #   run: docker push pasanchamikara99/microservices
+      - name: docker push
+        run: docker push pasanchamikara99/microservices
       #     docker push pasanchamikara99/books
       #     docker push pasanchamikara99/orders
       #     docker push pasanchamikara99/user
