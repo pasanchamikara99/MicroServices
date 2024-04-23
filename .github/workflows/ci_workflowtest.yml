@@ -138,7 +138,8 @@ jobs:
           # Build a docker container and
           # push it to ECR so that it can
           # be deployed to ECS.
-          docker build -f ./Books/Dockerfile ./Books -t books
+          docker build -t nodejs-microservice-gateway .
+          docker tag nodejs-microservice-gateway:latest 471112941206.dkr.ecr.us-east-1.amazonaws.com/nodejs-microservice-gateway:latest
           docker push 471112941206.dkr.ecr.us-east-1.amazonaws.com/nodejs-microservice-gateway:latest
           echo "image=$ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
