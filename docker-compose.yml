@@ -26,3 +26,10 @@ services:
       - "3003:3003"
     depends_on:
       - gateway
+  
+  reviews:
+    build: Reviews/
+    ports:
+      - "3004:3004"
+    depends_on:
+      - gateway
