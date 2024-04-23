@@ -88,19 +88,19 @@ jobs:
           echo "Docker login successful"
       - name: docker build books
         run: |
-          docker build ./Books -t books
+          docker build ./Books -t pasanchamikara99/books
       - name: docker build orders
         run: |
-          docker build ./Orders -t orders
+          docker build ./Orders -t pasanchamikara99/orders
       - name: docker build books
         run: |
-          docker build ./User -t user
+          docker build ./User -t pasanchamikara99/user
       - name: docker build gateway
         run: |
-          docker build ./gateway -t gateway
+          docker build ./gateway -t pasanchamikara99/gateway
       - name: docker push
         run: |
-          docker push books
-          docker push orders
-          docker push user
-          docker push gateway
+          docker push pasanchamikara99/books
+          docker push pasanchamikara99/orders
+          docker push pasanchamikara99/user
+          docker push pasanchamikara99/gateway
