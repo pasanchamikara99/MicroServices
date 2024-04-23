@@ -1,6 +1,4 @@
 
-# Ignore any environment-specific files
-.env
 
 # Ignore any dependencies installed via npm or yarn
 /node_modules
