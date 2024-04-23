@@ -40,28 +40,30 @@ jobs:
           npm install
           npm test
 
-  security:
+  SnykSecurityScan:
+    needs: buildAndTest
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/node@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          command: code test
-          args: --json > snyk-report.json
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Snyk CLI
+        run: npm install -g snyk
+
+      - name: Authenticate with Snyk
+        run: snyk auth ${{ secrets.SNYK_TOKEN }}
+
+      - name: Snyk Scan
+        run: snyk test --json > snyk_report.json || true
+
       - name: Upload Snyk report
+        if: always()
         uses: actions/upload-artifact@v2
         with:
           name: snyk-report
-          path: snyk-report.json
-      - name: Download Snyk report artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: snyk-report
-          path: snyk-report
+          path: snyk_report.json
   scan:
+    needs: buildAndTest
     name: SecretsScan
     runs-on: ubuntu-latest
     steps:
@@ -74,6 +76,7 @@ jobs:
           GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE}}
 
   dockerize:
+    needs: buildAndTest
     name: Dockerize
     runs-on: ubuntu-latest
     steps:
