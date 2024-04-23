@@ -107,6 +107,7 @@ jobs:
           docker push pasanchamikara99/gateway
 
   deploy:
+    needs: dockerize
     name: Deploy
     runs-on: ubuntu-latest
     environment: production
