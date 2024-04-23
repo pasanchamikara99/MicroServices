@@ -14,7 +14,7 @@ app.use(helmet());
 app.use(cookieParser());
 app.use(csrf({ cookie: true }));
 
-const port = process.env.PORT || 3003;
+const port = process.env.PORT || 3004;
 
 app.use(express.json());
 app.use(router);
