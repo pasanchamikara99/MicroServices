@@ -86,7 +86,7 @@ jobs:
         run: |
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
       - name: docker-compose build
-        run: docker-compose build
+        run: docker-compose build --build-arg IAMGE_NAME=pasanchamikara99/microservices
       # - name: docker build books
       #   run: |
       #     docker build ./Books -t pasanchamikara99/books
