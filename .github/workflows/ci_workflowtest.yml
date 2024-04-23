@@ -79,6 +79,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: docker login
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
       - name: docker build books
         run: |
           docker build ./Books -t books
@@ -91,3 +97,9 @@ jobs:
       - name: docker build gateway
         run: |
           docker build ./gateway -t gateway
+      - name: docker push
+        run: |
+          docker push books
+          docker push orders
+          docker push user
+          docker push gateway
