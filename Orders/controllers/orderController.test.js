@@ -1,4 +1,4 @@
-describe("orderController", () => {
+describe("OrderController", () => {
   describe("placeOrder", () => {
     test("validate", () => {});
   });
