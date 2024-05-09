@@ -138,4 +138,5 @@ jobs:
           REGION: us-central1 # Update with your desired region
         run: |
           for service in books orders user gateway; do
-            gcloud run deploy $service --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/$serv
+             gcloud run deploy $service --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/$service --platform=managed --region=$REGION
+          done
