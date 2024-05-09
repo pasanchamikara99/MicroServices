@@ -127,7 +127,7 @@ jobs:
 
       - name: Build and push images (Using loop)
         run: |
-          for service_dir in ./Books ./Orders ./User ./Gateway; do
+          for service_dir in ./Books ./Orders ./User ./gateway; do
             service_name=$(basename "$service_dir" | tr '[:upper:]' '[:lower:]')
             docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/$service_name $service_dir
             docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/$service_name
