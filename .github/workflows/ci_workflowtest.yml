@@ -135,7 +135,7 @@ jobs:
 
       - name: Deploy to Cloud Run (using environment variable for region )
         env:
-          REGION: us-central1 # Update with your desired region
+          REGION: us-central1
         run: |
           for service in books orders user gateway; do
              gcloud run deploy $service --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/$service --platform=managed --region=$REGION
