@@ -120,7 +120,7 @@ jobs:
 
       - uses: google-github-actions/auth@v2
         with:
-          service_account: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+          credentials_json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
       - name: Configure Docker CLI
         run: gcloud auth configure-docker
 
