@@ -2,9 +2,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: ["main"]
+    branches: ["awsEC2"]
   pull_request:
-    branches: ["main"]
+    branches: ["awsEC2"]
 
 jobs:
   buildAndTest:
@@ -13,7 +13,6 @@ jobs:
     strategy:
       matrix:
         node-version: [20.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
       - uses: actions/checkout@v3
@@ -62,6 +61,7 @@ jobs:
         with:
           name: snyk-report
           path: snyk_report.json
+
   SecretsScan:
     needs: SnykSecurityScan
     runs-on: ubuntu-latest
@@ -72,11 +72,10 @@ jobs:
       - uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE}}
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
 
   dockerize:
     needs: SecretsScan
-    name: Dockerize
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -89,19 +88,69 @@ jobs:
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
       - name: docker build books
         run: |
-          docker build ./Books -t pasanchamikara99/books
+          docker build ./Books -t ${{ secrets.DOCKER_USERNAME }}/books
       - name: docker build orders
         run: |
-          docker build ./Orders -t pasanchamikara99/orders
-      - name: docker build books
+          docker build ./Orders -t ${{ secrets.DOCKER_USERNAME }}/orders
+      - name: docker build user
         run: |
-          docker build ./User -t pasanchamikara99/user
+          docker build ./User -t ${{ secrets.DOCKER_USERNAME }}/user
       - name: docker build gateway
         run: |
-          docker build ./gateway -t pasanchamikara99/gateway
-      - name: docker images push
+          docker build ./gateway -t ${{ secrets.DOCKER_USERNAME }}/gateway
+      - name: docker push books
         run: |
-          docker push pasanchamikara99/books
-          docker push pasanchamikara99/orders
-          docker push pasanchamikara99/user
-          docker push pasanchamikara99/gateway
+          docker push ${{ secrets.DOCKER_USERNAME }}/books
+      - name: docker push orders
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/orders
+      - name: docker push user
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/user
+      - name: docker push gateway
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/gateway
+
+  deploy:
+    needs: dockerize
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - uses: google-github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{secrets.SERVICE_ACCOUNT_KEY}}
+          project_id: ${{secrets.GCP_PROJECT_ID}}
+          export_default_credentials: true
+      - name: Configure Docker CLI
+        run: gcloud auth configure-docker
+      - name: docker build books
+        run: |
+          docker build ./Books -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/books
+      - name: docker build orders
+        run: |
+          docker build ./Orders -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/orders
+      - name: docker build user
+        run: |
+          docker build ./User -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/user
+      - name: docker build gateway
+        run: |
+          docker build ./gateway -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/gateway
+      - name: docker push books
+        run: |
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/books
+      - name: docker push orders
+        run: |
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/orders
+      - name: docker push user
+        run: |
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/user
+      - name: docker push gateway
+        run: |
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/gateway
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy books --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/books --platform=managed --region=YOUR_REGION
+          gcloud run deploy orders --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/orders --platform=managed --region=YOUR_REGION
+          gcloud run deploy user --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/user --platform=managed --region=YOUR_REGION
+          gcloud run deploy gateway --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/gateway --platform=managed --region=YOUR_REGION
