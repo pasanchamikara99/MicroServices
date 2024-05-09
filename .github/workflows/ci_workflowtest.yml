@@ -138,7 +138,7 @@ jobs:
           docker build ./Gateway -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/gateway
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/gateway
 
-      - name: Deploy to Cloud Run
+      - name: Deploy to Cloud Run test
         run: |
           gcloud run deploy books --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/books --platform=managed --region=REGION_YOU_WANT (e.g., us-central1)
           gcloud run deploy orders --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/orders --platform=managed --region=REGION_YOU_WANT
