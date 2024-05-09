@@ -128,10 +128,10 @@ jobs:
       - name: Build and push images (Using loop)
         run: |
           for service_dir in ./Books ./Orders ./User ./Gateway; do
-           service_name="${service_dir##*/}" | tr '[:upper:]' '[:lower:]')
-           docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/$service_name $service_dir
-           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/$service_name
-           done
+            service_name="${service_dir##*/}" | tr '[:upper:]' '[:lower:]')
+            docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/$service_name $service_dir
+            docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/$service_name
+          done
 
       - name: Deploy to Cloud Run (using environment variable for region)
         env:
