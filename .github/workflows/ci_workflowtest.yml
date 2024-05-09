@@ -133,7 +133,7 @@ jobs:
             docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/$service_name
           done
 
-      - name: Deploy to Cloud Run (using environment variable for region)
+      - name: Deploy to Cloud Run (using environment variable for region )
         env:
           REGION: us-central1 # Update with your desired region
         run: |
