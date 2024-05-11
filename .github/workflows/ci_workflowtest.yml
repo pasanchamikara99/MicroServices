@@ -6,6 +6,13 @@ on:
   pull_request:
     branches: ["deploy-to-aws-gateway"]
 
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  GKE_CLUSTER: nodecluser1 
+  GKE_ZONE: asia-south1 
+  IMAGE: gcr.io/${{ secrets.GCP_PROJECT_ID }}/microservices-gateway:latest
+    
+
 jobs:
   buildAndTest:
     runs-on: ubuntu-latest
@@ -61,6 +68,7 @@ jobs:
         with:
           name: snyk-report
           path: snyk_report.json
+
   SecretsScan:
     needs: SnykSecurityScan
     runs-on: ubuntu-latest
@@ -105,66 +113,31 @@ jobs:
           docker push pasanchamikara99/user
           docker push pasanchamikara99/gateway
 
-          
   deploy:
     needs: dockerize
     name: Deploy
     runs-on: ubuntu-latest
     environment: production
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@0e613a0980cbf65ed5b322eb7a1e075d28913a83
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-        with:
-          mask-password: 'true'
-
-      - name: Build, tag, and push image to Amazon ECR
-        id: build-image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: latest
-          REPOSITORY: nodejs-microservice-gateway
+      - name: Build and Push Docker image
         run: |
-          # Build a docker container and
-          # push it to ECR so that it can
-          # be deployed to ECS.
-          docker build -t $ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG ./Books
-          docker push $ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG 
-          echo "image=$ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+          gcloud builds submit --tag $IMAGE
 
-      - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@c804dfbdd57f713b6c079302a4c01db7017a36fc
-        with:
-          task-definition: node-app-task-definition.json
-          container-name: node-gateway-container
-          image: ${{ steps.build-image.outputs.image }}
+      - name: Install kubectl
+        run: gcloud components install kubectl
 
-      - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: nodejs-service
-          cluster: nodejs-microservice-gateway
-          wait-for-service-stability: true
+      - name: Install GKE gcloud Auth Plugin
+        run: |
+          gcloud components install gke-gcloud-auth-plugin
+          echo "PATH=$PATH:/opt/hostedtoolcache/gcloud/472.0.0/x64/bin" >> $GITHUB_ENV
 
+      - name: Set up Kubectl
+        run: gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE --project $PROJECT_ID
 
+      - name: Deploy to GKE
+        run: |
+          kubectl apply -f kubernetes/k8s.yaml --validate=false
+          kubectl rollout status deployment/web-app-deployment
 
-
-
-
-
-
-
-
-          
+      - name: Verify deployment
+        run: kubectl get all

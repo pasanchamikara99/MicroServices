@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-deployment  # Name of the deployment
+spec:
+  replicas: 1  # Number of replicas
+  selector:
+    matchLabels:
+      app: gateway-service-web-app  # This should match the spec.template.metadata.labels 12211111
+  template:
+    metadata:
+      labels:
+        app: gateway-service-web-app 
+    spec:
+      containers:
+      - name: gateway-service-web-app 
+        image: gcr.io/nodejs-microservice/microservices-gateway:latest  # Be sure to replace with your actual image
+        ports:
+        - containerPort: 3000  # The port your container exposes
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway-deployment  # Name of the service
+spec:
+  selector:
+    app: gateway-service-web-app   # This should match the template.metadata.labels in your Deployment
+  ports:
+  - protocol: TCP
+    port: 80  # The service port
+    targetPort: 3000  # The container port
+  type: LoadBalancer  # Exposes the Service externally using a cloud provider’s load balancer
