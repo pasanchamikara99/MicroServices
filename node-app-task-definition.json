@@ -1,9 +1,9 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:us-east-1:471112941206:task-definition/node-app-task-definition:1",
+    "taskDefinitionArn": "arn:aws:ecs:eu-north-1:471112941206:task-definition/node-app-task-definition:1",
     "containerDefinitions": [
         {
             "name": "node-gateway-container",
-            "image": "471112941206.dkr.ecr.us-east-1.amazonaws.com/nodejs-microservice-gateway:latest",
+            "image": "471112941206.dkr.ecr.eu-north-1.amazonaws.com/nodejs-microservice",
             "cpu": 0,
             "portMappings": [
                 {
@@ -25,7 +25,7 @@
                 "options": {
                     "awslogs-create-group": "true",
                     "awslogs-group": "/ecs/node-app-task-definition",
-                    "awslogs-region": "us-east-1",
+                    "awslogs-region": "eu-north-1",
                     "awslogs-stream-prefix": "ecs"
                 },
                 "secretOptions": []
@@ -34,6 +34,7 @@
         }
     ],
     "family": "node-app-task-definition",
+    "taskRoleArn": "arn:aws:iam::471112941206:role/ecsTaskExecutionRole",
     "executionRoleArn": "arn:aws:iam::471112941206:role/ecsTaskExecutionRole",
     "networkMode": "awsvpc",
     "revision": 1,
@@ -51,6 +52,9 @@
         },
         {
             "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.task-iam-role"
         },
         {
             "name": "ecs.capability.execution-role-ecr-pull"
@@ -80,7 +84,7 @@
         "cpuArchitecture": "X86_64",
         "operatingSystemFamily": "LINUX"
     },
-    "registeredAt": "2024-04-23T09:24:35.747Z",
-    "registeredBy": "arn:aws:iam::471112941206:user/pasindu_iam",
+    "registeredAt": "2024-05-10T03:33:36.469Z",
+    "registeredBy": "arn:aws:iam::471112941206:root",
     "tags": []
 }
