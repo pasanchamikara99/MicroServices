@@ -121,7 +121,7 @@ jobs:
     steps:
       - name: Build and Push Docker image
         run: |
-          gcloud builds submit --tag $IMAGE
+          gcloud builds submit --tag $IMAGE gateway\Dockerfile .
 
       - name: Install kubectl
         run: gcloud components install kubectl
