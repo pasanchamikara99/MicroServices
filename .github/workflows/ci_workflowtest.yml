@@ -2,9 +2,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: ["deploy-to-aws-gateway"]
+    branches: ["deploy-to-google"]
   pull_request:
-    branches: ["deploy-to-aws-gateway"]
+    branches: ["deploy-to-google"]
 
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
